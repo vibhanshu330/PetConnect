@@ -1,25 +1,45 @@
 # PetConnect
 
-PetConnect is a Java web application for pet adoption and shelter management. It provides adopter, shelter, and administrator workflows for browsing pets, managing adoption applications, and exchanging messages.
+PetConnect is a role-based pet adoption web application that connects adopters with shelter listings. Shelters manage their pets and adoption requests, adopters discover pets and submit applications, and administrators oversee users and listings.
+
+## Features
+
+| Role | Available workflows |
+| --- | --- |
+| **Adopter** | Browse and filter available pets, view pet details, receive preference-based compatibility scores, submit adoption applications, review application history, and exchange messages. |
+| **Shelter** | Add and edit pet listings, review applications, approve or reject requests, and message adopters. |
+| **Administrator** | View platform statistics, review pending pet listings, manage pets, and manage user accounts. |
+
+Other application features include profile management, registration, BCrypt password hashing, per-account upgrade of existing salted SHA-256 hashes after successful login, and CSRF protection for POST requests.
 
 ## Technology
 
-- Java 21
-- Maven, packaged as a WAR
-- JSP and Java Servlets using `javax.servlet`
+- Java 21 and Maven
+- Java Servlets and JSP (`javax.servlet`)
 - Apache Tomcat 9
 - MySQL with JDBC (MySQL Connector/J)
-- JUnit 5 and Mockito for unit/regression tests
+- JUnit 5 and Mockito for automated tests
 
-Tomcat 9 is required for this version because the project uses the `javax.servlet` API. Tomcat 10+ uses `jakarta.servlet` and is not compatible without migrating the application.
+Tomcat 9 is required: this application uses `javax.servlet`, while Tomcat 10+ uses `jakarta.servlet`.
+
+## Application structure
+
+- `src/main/java/com/petconnect/servlet/` — request handlers for authentication, profiles, and role workflows.
+- `src/main/java/com/petconnect/dao/` — database access.
+- `src/main/java/com/petconnect/filter/` — role authorization and CSRF checks.
+- `src/main/webapp/` — JSP views, shared fragments, and CSS.
+- `src/test/` — automated unit and regression tests.
+- `docs/test-cases.md` — manual test cases and their historical execution notes.
+
+Requests under `/admin/*`, `/shelter/*`, and `/adopter/*` require a logged-in account with the matching role. Shelter operations also check pet ownership in the relevant servlet. The application does not include a database migration or automatic sample-data loader.
 
 ## Prerequisites
 
-Install a JDK 21, Maven 3.9 or later, MySQL, and Apache Tomcat 9. Confirm that `java -version` and `mvn -version` use Java 21.
+Install JDK 21, Maven 3.9 or later, MySQL, and Apache Tomcat 9. Confirm that `java -version` and `mvn -version` use Java 21.
 
 ## Database configuration
 
-The application expects a MySQL database named `petconnect`. Configure the environment of the JVM that runs the application:
+The application expects a configured MySQL schema named `petconnect`. Set these variables in the environment of the process that starts Tomcat (or in the IDE's Tomcat run configuration):
 
 | Variable | Required | Default / example |
 | --- | --- | --- |
@@ -27,40 +47,38 @@ The application expects a MySQL database named `petconnect`. Configure the envir
 | `DB_USER` | Yes | Your MySQL account name |
 | `DB_PASSWORD` | Yes | Your MySQL password |
 
-Do not put real credentials in Java source, this README, or version control. Set the variables in your IDE's run configuration or in the environment used to start Tomcat. Tomcat must inherit these variables when its JVM starts; setting them in an unrelated terminal after Tomcat is already running has no effect. Missing or blank `DB_USER` / `DB_PASSWORD` values produce a clear configuration error.
+Tomcat must inherit the variables when its JVM starts; setting them in an unrelated terminal after Tomcat is already running has no effect. Never put real credentials in source code, this README, or version control. A `.env` file is not loaded automatically by Java or Tomcat, and any populated local configuration file must remain untracked.
 
-For local development, a gitignored `.env` file may be used as a private place to keep values, but Java and Tomcat do not load `.env` automatically. Export the values into the launching process or configure them in the IDE/Tomcat startup environment. Never add a populated local config file to Git.
+### Database safety
 
-## Database setup safety
+The local `database/petconnect.sql` initializer is intentionally excluded from Git. It contains `DROP DATABASE IF EXISTS petconnect` and sample rows. **Do not run it against a database containing data you need.** The application and Maven do not execute SQL scripts automatically. Configure the schema separately using a reviewed, safe process. The initializer's sample password hashes are placeholders and cannot be used to sign in.
 
-The local `database/petconnect.sql` initializer is deliberately excluded from Git. It contains `DROP DATABASE IF EXISTS petconnect` and sample rows. **Do not execute it against any database containing data you need.** It deletes the existing `petconnect` database before recreating it. No SQL script is run automatically by the application, Maven, or this repository setup. Review the script and make a backup before any deliberate use; preferably create a fresh disposable development database and adapt the script to avoid the drop statement.
+## Build, test, and deploy
 
-Create/configure the schema separately using a safe, reviewed process before starting the app. The application does not migrate or seed the database automatically. The initializer's sample password hashes are placeholders and are not usable login credentials.
-
-## Build and deploy
-
-From the project root:
-
-```sh
-mvn clean package
-```
-
-This creates `target/petconnect.war`. Copy that WAR into Tomcat 9's `webapps` directory, ensuring the Tomcat process has `DB_USER` and `DB_PASSWORD` configured, then start/restart Tomcat. The app is available under `/petconnect` by default. Build output under `target/` is generated and ignored by Git.
-
-## Tests
-
-Run the automated test suite with:
+Run the automated tests:
 
 ```sh
 mvn test
 ```
 
-The unit/regression tests use mocks and do not require connecting to MySQL. `docs/test-cases.md` records manual application checks and their prior execution context; those results are historical and should not be treated as a fresh run for another machine.
+Build the deployable WAR:
 
-## Authentication and request security
+```sh
+mvn package
+```
 
-Every POST request requires a cryptographically random synchronizer token tied to the browser session. Forms obtain it from the session, including login, registration, profile changes, adoption applications, shelter/admin actions, messaging, logout, and multipart pet image uploads. Logout is a POST action. Passwords are stored as BCrypt hashes (cost 12); the existing `VARCHAR(255)` column is sufficient. Existing salted SHA-256 hashes remain verifiable and are upgraded to BCrypt after that account's next successful login. This migration is automatic and per-account; it does not run SQL or reset accounts. The initializer's `PLACEHOLDER_HASH` values remain unusable until replaced with actual hashes from `PasswordHashGenerator`.
+The output is `target/petconnect.war`. Copy it to Tomcat 9's `webapps` directory and start Tomcat with the database environment variables configured. The default application context is `/petconnect`.
 
-## Repository contents and publishing
+The automated tests use mocks and do not require MySQL. Manual checks should use existing accounts and data where possible; avoid destructive admin or shelter actions when validating a populated database. The cases in `docs/test-cases.md` describe prior manual checks and are historical, not a guarantee of current behavior on another machine.
 
-The project repository intentionally excludes Maven output, local IDE settings, local secrets/configuration, and SQL dumps or database initializers. Review `git status` and the staged file list before committing or pushing. This setup does not create a commit or publish the repository.
+## Security notes
+
+- Every POST request requires a cryptographically random CSRF token associated with the browser session, including login, registration, profile changes, adoption applications, shelter and admin actions, messaging, logout, and multipart pet uploads.
+- Logout is a POST action.
+- Passwords are stored as BCrypt hashes with cost 12. Existing salted SHA-256 hashes are verified and upgraded to BCrypt after that account's next successful login.
+- The existing `VARCHAR(255)` password column accommodates BCrypt hashes. Hash upgrades happen per account at login; they do not reset accounts or run a database-wide migration.
+- Replace `PLACEHOLDER_HASH` values with real generated hashes before using any initializer-provided account in a disposable database.
+
+## Repository hygiene
+
+The repository excludes generated Maven output, local IDE settings, local secrets/configuration, and SQL dumps or database initializers. Before committing, review `git status`, the staged file list, and the diff to ensure that only intended files and no credentials or database contents are included.
