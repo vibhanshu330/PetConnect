@@ -1,0 +1,8 @@
+package com.petconnect.servlet.adopter;
+import com.petconnect.servlet.MessagesServletBase;
+import javax.servlet.annotation.WebServlet;
+@WebServlet("/adopter/messages")
+public class AdopterMessagesServlet extends MessagesServletBase {
+    protected boolean adopter(){return true;}
+    protected String route(){return "/adopter/messages";}
+}

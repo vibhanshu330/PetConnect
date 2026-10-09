@@ -1,0 +1,32 @@
+# Maven / Java build output
+target/
+*.class
+
+# Local secrets and configuration
+.env
+.env.*
+!.env.example
+*.local.properties
+config/local.properties
+
+# Database exports, dumps, and destructive local initializers
+database/*.sql
+database/*.dump
+database/*.bak
+database/*.backup
+
+# Logs and runtime files
+*.log
+logs/
+*.pid
+
+# IDE / operating system files
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Backups
+*.bak
+*.backup
+*~

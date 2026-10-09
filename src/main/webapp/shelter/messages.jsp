@@ -1,0 +1,12 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><title>Messages - PetConnect</title><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">    <link href="${pageContext.request.contextPath}/assets/petconnect.css" rel="stylesheet">
+</head>
+<body class="bg-light pc-app"><nav class="navbar navbar-dark bg-success"><div class="container"><a class="navbar-brand" href="${pageContext.request.contextPath}/shelter/dashboard.jsp">🐾 PetConnect — Shelter</a><form method="post" action="${pageContext.request.contextPath}/logout" class="d-inline"><%@ include file="/common/csrf.jspf" %><button type="submit" class="btn btn-outline-light btn-sm">Logout</button></form></div></nav>
+<main class="container py-4"><h2>Messages</h2><c:if test="${not empty error}"><div class="alert alert-danger"><c:out value="${error}"/></div></c:if><div class="row g-3"><aside class="col-md-4"><div class="list-group">
+<c:forEach var="t" items="${threads}"><c:set var="peer" value="${t.senderId == sessionScope.userId ? t.receiverId : t.senderId}"/><a class="list-group-item list-group-item-action" href="${pageContext.request.contextPath}/shelter/messages?petId=${t.petId}&amp;peerId=${peer}"><strong><c:out value="${t.petName}"/></strong> · Conversation #${peer}<br><small><c:out value="${t.body}"/></small></a></c:forEach>
+</div></aside><section class="col-md-8"><c:if test="${petId > 0}"><div class="card"><div class="card-header">Conversation about pet #${petId}</div><div class="card-body">
+<c:forEach var="m" items="${conversation}"><div class="mb-3"><strong><c:out value="${m.senderName}"/></strong> <small class="text-muted"><c:out value="${m.sentAt}"/></small><div class="text-break"><c:out value="${m.body}"/></div></div><hr/></c:forEach>
+<form method="post" action="${pageContext.request.contextPath}/shelter/messages"><%@ include file="/common/csrf.jspf" %><input type="hidden" name="petId" value="${petId}"><input type="hidden" name="peerId" value="${peerId}"><label class="form-label" for="body">Reply</label><textarea class="form-control mb-2" id="body" name="body" rows="3" maxlength="5000" required></textarea><button class="btn btn-success">Send reply</button></form></div></div></c:if></section></div></main><%@ include file="/common/footer.jspf" %>
+</body></html>
