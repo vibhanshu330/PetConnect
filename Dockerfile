@@ -13,4 +13,8 @@ RUN rm -rf /usr/local/tomcat/webapps/*
 
 COPY --from=build /app/target/*.war /usr/local/tomcat/webapps/petconnect.war
 
+RUN sed -i 's/port="8080"/port="${PORT:8080}"/' /usr/local/tomcat/conf/server.xml
+
 EXPOSE 8080
+
+CMD ["catalina.sh", "run"]
