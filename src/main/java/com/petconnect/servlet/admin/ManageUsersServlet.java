@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/admin/users")
+/**
+ * Loads user records for the administrator user-management page.
+ */
 public class ManageUsersServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(ManageUsersServlet.class.getName());

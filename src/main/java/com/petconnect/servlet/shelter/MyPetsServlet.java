@@ -16,6 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/shelter/my-pets")
+/**
+ * Loads the signed-in shelter's pet listings for its management page.
+ */
 public class MyPetsServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(MyPetsServlet.class.getName());

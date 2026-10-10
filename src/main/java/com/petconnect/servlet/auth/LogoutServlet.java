@@ -8,6 +8,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebServlet("/logout")
+/**
+ * Ends the current user session and redirects to the public landing page.
+ */
 public class LogoutServlet extends HttpServlet {
 
     @Override

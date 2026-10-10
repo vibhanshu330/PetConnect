@@ -10,6 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/shelter/applications")
+/**
+ * Loads adoption applications associated with the signed-in shelter.
+ */
 public class ShelterApplicationsServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(ShelterApplicationsServlet.class.getName());
     private final AdoptionApplicationDAO applicationDAO = new AdoptionApplicationDAO();

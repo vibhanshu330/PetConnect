@@ -16,6 +16,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/adopter/history")
+/**
+ * Loads the signed-in adopter's completed adoption history.
+ */
 public class AdoptionHistoryServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(AdoptionHistoryServlet.class.getName());
     private final AdoptionHistoryDAO historyDAO = new AdoptionHistoryDAO();

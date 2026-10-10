@@ -17,6 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/login")
+/**
+ * Validates login submissions and creates a session for an authenticated user.
+ */
 public class LoginServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());

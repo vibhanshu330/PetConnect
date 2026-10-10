@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/shelter/delete-pet")
+/**
+ * Processes a shelter request to remove one of its own pet listings.
+ */
 public class DeletePetServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(DeletePetServlet.class.getName());

@@ -10,6 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/shelter/reject-application")
+/**
+ * Processes a shelter decision to reject an adoption application for its own listing.
+ */
 public class RejectApplicationServlet extends HttpServlet {
     private static final Logger LOGGER = Logger.getLogger(RejectApplicationServlet.class.getName());
     private final AdoptionApplicationDAO applicationDAO = new AdoptionApplicationDAO();

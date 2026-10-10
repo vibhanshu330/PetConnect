@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/admin/reject-pet")
+/**
+ * Handles an administrator's request to reject a submitted pet listing.
+ */
 public class RejectPetServlet extends HttpServlet {
 
     private static final Logger LOGGER =

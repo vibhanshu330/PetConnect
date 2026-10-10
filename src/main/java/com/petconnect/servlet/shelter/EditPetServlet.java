@@ -28,6 +28,9 @@ import java.util.logging.Logger;
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 10
 )
+/**
+ * Updates a shelter's pet listing after validating submitted fields and any uploaded image.
+ */
 public class EditPetServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(EditPetServlet.class.getName());

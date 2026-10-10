@@ -14,6 +14,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/admin/approve-pet")
+/**
+ * Handles an administrator's request to approve a shelter-submitted pet listing.
+ */
 public class ApprovePetServlet extends HttpServlet {
 
     private static final Logger LOGGER =

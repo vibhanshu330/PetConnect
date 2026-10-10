@@ -20,6 +20,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/adopter/my-applications")
+/**
+ * Builds the signed-in adopter's application list with related pet details and statuses.
+ */
 public class MyApplicationsServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(MyApplicationsServlet.class.getName());

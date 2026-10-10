@@ -15,6 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/admin/pending-pets")
+/**
+ * Loads pet listings that are waiting for administrator review.
+ */
 public class PendingPetsServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(PendingPetsServlet.class.getName());

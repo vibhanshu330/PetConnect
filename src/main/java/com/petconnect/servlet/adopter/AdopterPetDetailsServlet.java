@@ -17,6 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @WebServlet("/adopter/pet-details")
+/**
+ * Shows a pet's details and adopter-specific application and compatibility information.
+ */
 public class AdopterPetDetailsServlet extends HttpServlet {
 
     private static final Logger LOGGER = Logger.getLogger(AdopterPetDetailsServlet.class.getName());
